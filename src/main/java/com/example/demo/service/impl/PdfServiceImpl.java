@@ -15,7 +15,7 @@ import com.itextpdf.io.source.ByteArrayOutputStream;
 
 
 @Service
-public class PdfService {
+public class PdfServiceImpl {
 	@Autowired
 	private SpringTemplateEngine templateEngine;
 	

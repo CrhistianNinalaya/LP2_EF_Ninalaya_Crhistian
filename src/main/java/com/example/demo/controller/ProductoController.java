@@ -2,9 +2,7 @@ package com.example.demo.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.entity.CategoriaEntity;
 import com.example.demo.entity.ProductoEntity;
 import com.example.demo.entity.UsuarioEntity;
-import com.example.demo.repository.ProductoRepository;
+
 import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ProductoService;
-import com.example.demo.service.UsuarioService;
-import com.example.demo.service.impl.PdfService;
+
+import com.example.demo.service.impl.PdfServiceImpl;
 
 
 import jakarta.servlet.http.HttpSession;
@@ -37,15 +35,13 @@ import jakarta.servlet.http.HttpSession;
 public class ProductoController {
 	
 	@Autowired
-	private UsuarioService usuarioService;
-	@Autowired
 	private ProductoService productoService;
 	
 	@Autowired
 	private CategoriaService categoriaService;
 	
 	@Autowired
-	private PdfService pdfService;	
+	private PdfServiceImpl pdfService;	
 	
 	private static final String USUARIO_LOGEADO= "usuario";
 	
@@ -58,8 +54,6 @@ public class ProductoController {
 		String nombreApellido = usuarioLogeado.getNombres() +' ' + usuarioLogeado.getApellidos();
 		
 		model.addAttribute("usuario",nombreApellido);
-//		UsuarioEntity usuarioEntity = usuarioService.buscarUsuarioPorCorreo(correo);
-//		model.addAttribute("foto", usuarioEntity.getUrlImagen());
 				
 		List<ProductoEntity>productos = productoService.findAllProductos();
 

@@ -21,19 +21,19 @@
         <form action="#" th:action="@{/editarProducto}" th:object="${producto}" method="post">
         	<div class="mb-3">
                 <label for="idProducto" class="form-label">Id del Producto</label>
-                <input type="text" class="form-control" id="idProducto" th:field="*{idProducto}" readonly>
+                <input type="text" class="form-control" id="idProducto" th:field="*{idProducto}" readonly >
             </div>
             <div class="mb-3">
                 <label for="nomProducto" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control" id="nomProducto" th:field="*{nomProducto}">
+                <input type="text" class="form-control" id="nomProducto" th:field="*{nomProducto}" required>
             </div>
             <div class="mb-3">
                 <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" th:field="*{precio}">
+                <input type="number" class="form-control" id="precio" th:field="*{precio}" required>
             </div>
             <div class="mb-3">
                 <label for="stock" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock" th:field="*{stock}">
+                <input type="number" class="form-control" id="stock" th:field="*{stock}" required>
             </div>
             <div class="mb-3">
                 <label for="categoria" class="form-label">Categoría</label>
