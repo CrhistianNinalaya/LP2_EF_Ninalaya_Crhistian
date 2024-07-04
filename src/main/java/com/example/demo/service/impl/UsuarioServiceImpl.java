@@ -13,7 +13,6 @@ import com.example.demo.service.UsuarioService;
 //import com.example.demo.utils.Utilitarios;
 import com.example.demo.utils.Utilitarios;
 
-
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
 
