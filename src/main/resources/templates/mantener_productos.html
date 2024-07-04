@@ -13,11 +13,15 @@
 
 
     <main class="container mt-2">
-        <div class="d-flex justify-content-end">
-            <div class="row mb-2">
-                <button type="button" class="btn btn-secondary">Cerrar Sesión</button>
-            </div>
-        </div>
+ <div class="d-flex justify-content-between mt-4">
+ 		<div class="row mb-2">
+	        <p class="text-light" th:text="'Bienvenido: ' + ${usuario}"></p>
+	    </div>
+	    <div class="row mb-2">
+	        <a th:href="@{/logout}" class="btn btn-secondary">Cerrar Sesión</a>
+	    </div>
+	</div>
+
 
 	<form class="row g-3 my-2" th:action="@{/filtrarProducto}" method="post">
 	    <div class="col-auto text-light">
@@ -41,7 +45,7 @@
         <div class="d-flex justify-content-between mt-4">
             <a href="/agregarProducto" class="btn btn-primary">Agregar Producto</a>
             <div></div>
-            <button type="button" class="btn btn-info">Generar PDF</button>
+            <a href="/generarPDF" class="btn btn-info">Generar PDF</a>
         </div>
         <h1 class="text-light">Lista de Productos</h1>
         <table class="table table-dark table-hover">
@@ -66,8 +70,7 @@
                         <a th:href="@{/verProducto/{id}(id=${producto.idProducto})}" class="btn btn-info">Ver</a>
                         <a th:href="@{/editarProducto/{id}(id=${producto.idProducto})}"
                             class="btn btn-warning">Editar</a>
-                        <a th:href="@{/borrarProducto/{id}(id=${producto.idProducto})} " class="btn btn-danger"
-                            onclick="return confirm('¿Seguro que deseas borrar este registro?')">Eliminar</a>
+                        
                     </td>
                 </tr>
             </tbody>

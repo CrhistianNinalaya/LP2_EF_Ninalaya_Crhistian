@@ -38,17 +38,15 @@ public class UsuarioServiceImpl implements UsuarioService{
 		UsuarioEntity usuarioEncontradoPorcCorreo = 
 				usuarioRepository.findByCorreo(usuarioEntity.getCorreo());
 		
-		// Correo existe?
 		if(usuarioEncontradoPorcCorreo == null) {
 			return false;
 		}
-		// validar si el password input hace match con password de base de datos
+
 		if(!Utilitarios.checkPassword(usuarioEntity.getPassword(), 
 				usuarioEncontradoPorcCorreo.getPassword())) {
 			return false;
 		}
-		session.setAttribute("usuario", usuarioEncontradoPorcCorreo.getCorreo());
-		
+		session.setAttribute("usuario", usuarioEncontradoPorcCorreo);		
 		return true;
 	}
 	

@@ -25,7 +25,7 @@ public class ProductoServiceImpl implements ProductoService{
 	@Override
 	public void crearProducto(ProductoEntity productoEntity, Model model) {
 		productoRepository.save(productoEntity);
-		
+
 		model.addAttribute("msgRetorno", "Registro Correcto");
 		model.addAttribute("classRetorno", "alert alert-success");
 		model.addAttribute("producto", new ProductoEntity());

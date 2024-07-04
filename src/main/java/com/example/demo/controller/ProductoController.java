@@ -1,9 +1,19 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +28,8 @@ import com.example.demo.repository.ProductoRepository;
 import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ProductoService;
 import com.example.demo.service.UsuarioService;
+import com.example.demo.service.impl.PdfService;
+
 
 import jakarta.servlet.http.HttpSession;
 
@@ -32,13 +44,20 @@ public class ProductoController {
 	@Autowired
 	private CategoriaService categoriaService;
 	
+	@Autowired
+	private PdfService pdfService;	
+	
+	private static final String USUARIO_LOGEADO= "usuario";
+	
 	@GetMapping("/menu")
 	public String showMenu(HttpSession session, Model model) {
-//		if(session.getAttribute("usuario") == null) {
-//			return "redirect:/";
-//		}
+		if(session.getAttribute("usuario") == null) {
+			return "redirect:/";
+		}		
+		UsuarioEntity usuarioLogeado= (UsuarioEntity) session.getAttribute(USUARIO_LOGEADO);
+		String nombreApellido = usuarioLogeado.getNombres() +' ' + usuarioLogeado.getApellidos();
 		
-//		String correo = session.getAttribute("usuario").toString();
+		model.addAttribute("usuario",nombreApellido);
 //		UsuarioEntity usuarioEntity = usuarioService.buscarUsuarioPorCorreo(correo);
 //		model.addAttribute("foto", usuarioEntity.getUrlImagen());
 				
@@ -50,7 +69,11 @@ public class ProductoController {
 		return "mantener_productos";
 	}
 	@PostMapping("/filtrarProducto")
-	public String filtrarPorId(@RequestParam("inputId") Integer inputId, Model model) {
+	public String filtrarPorId(@RequestParam("inputId") Integer inputId, Model model, HttpSession session) {
+		UsuarioEntity usuarioLogeado= (UsuarioEntity) session.getAttribute(USUARIO_LOGEADO);
+		String nombreApellido = usuarioLogeado.getNombres() +' ' + usuarioLogeado.getApellidos();
+		
+		model.addAttribute("usuario",nombreApellido);
 	    System.out.println("Valor introducido: " + inputId);
 	    ProductoEntity productoBuscado = productoService.findByIdProducto(inputId);
 	    System.out.println(productoBuscado);
@@ -127,8 +150,29 @@ public class ProductoController {
 	}
 	@GetMapping("/borrarProducto/{id}")
 	public String eliminarEmpleado(@PathVariable("id")Integer id) {
+			
 		productoService.borrarProducto(id);
 		return "redirect:/menu";
 	}
 	
+	@GetMapping("/generarPDF")
+	public ResponseEntity<InputStreamResource> geneararPdf(HttpSession session) throws IOException{
+		List<ProductoEntity> lstProductos = productoService.findAllProductos();
+		UsuarioEntity usuarioLogeado = (UsuarioEntity) session.getAttribute(USUARIO_LOGEADO);
+		String nombreApellido = usuarioLogeado.getNombres() +' ' + usuarioLogeado.getApellidos();		
+		
+		Map<String,Object> datosPdf= new HashMap<String, Object>();
+		datosPdf.put("lstProductos", lstProductos);
+		datosPdf.put("usuarioReporte", nombreApellido);
+		
+		ByteArrayInputStream pdfBytes = pdfService.generarPdfDeHtml("template_pdf", datosPdf);
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Content-Disposition", "inline; filename=productos.pdf");
+		
+		return ResponseEntity.ok()
+				.headers(httpHeaders)
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(new InputStreamResource(pdfBytes));
+	}
 }
